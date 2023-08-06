@@ -2,14 +2,14 @@ let head: NodeElement | null = null;
 
 export class NodeElement {
   pointer: NodeElement | null = null;
-  data: string | null = null;
+  data: any | null = null;
 
-  constructor(data: string) {
+  constructor(data: any) {
     this.data = data;
   }
 }
 
-function enQueue(element: NodeElement) {
+export function enQueue(element: NodeElement) {
   let headElement = head;
   if (!headElement) {
     head = element;
@@ -22,10 +22,20 @@ function enQueue(element: NodeElement) {
   headElement.pointer = element;
 }
 
-function deQueue() {
+export function deQueue() {
   if (head) {
+    const oldElement = head;
     head = head.pointer;
+    return oldElement;
   }
+  return null;
+}
+
+export function QHasElement() {
+  if (!head) {
+    return false;
+  }
+  return true;
 }
 
 function printQueue() {
@@ -48,4 +58,4 @@ function start() {
   printQueue(); // print linked list
 }
 
-start();
+// start();

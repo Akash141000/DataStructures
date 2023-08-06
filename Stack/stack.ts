@@ -2,9 +2,9 @@ let head: NodeElement | null = null;
 
 export class NodeElement {
   pointer: NodeElement | null = null;
-  data: string | null = null;
+  data: any | null = null;
 
-  constructor(data: string) {
+  constructor(data: any) {
     this.data = data;
   }
 }
@@ -43,6 +43,13 @@ function pop() {
     }
     return headElement;
   }
+}
+
+export function stackHasElement() {
+  if (!head) {
+    return false;
+  }
+  return true;
 }
 
 function printQueue() {
