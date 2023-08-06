@@ -6,45 +6,42 @@ const dfs = (tree: any[]) => {
   const dfsTraverse = (position: number) => {
     let leftChild = position * 2 + 1;
     let rightChild = position * 2 + 2;
-    // if (typeof tree[position] === "number") {
-    //   console.log(
-    //     "Element-->",
-    //     tree[position],
-    //     "Position-->",
-    //     position,
-    //     "Left-->",
-    //     leftChild,
-    //     "Right-->",
-    //     rightChild
-    //   );
-    // }
+
+    if (typeof tree[position] !== "number") {
+      return;
+    }
 
     //Pre-Order Traversal
     // if (typeof tree[position] === "number") {
     //   console.log("Visited -->", tree[position]);
     // }
-    // if (!tree[leftChild] && !tree[rightChild]) {
-    //   return;
-    // }
-    // if (leftChild) {
+    // if (leftChild && tree[leftChild]) {
     //   dfsTraverse(leftChild);
     // }
-    // if (rightChild) {
+    // if (rightChild && tree[rightChild]) {
     //   dfsTraverse(rightChild);
     // }
 
-    //  In-Order Traversal //need to organise code to work
+    //  In-Order Traversal
+    // if (leftChild && tree[leftChild]) {
+    //   dfsTraverse(leftChild);
+    // }
     // if (typeof tree[position] === "number") {
     //   console.log("Visited -->", tree[position]);
     // }
-    // if (!tree[leftChild] && !tree[rightChild]) {
-    //   return;
+    // if (rightChild && tree[rightChild]) {
+    //   dfsTraverse(rightChild);
     // }
-    // if (leftChild) {
+
+    //  Post-Order Traversal
+    // if (leftChild && tree[leftChild]) {
     //   dfsTraverse(leftChild);
     // }
-    // if (rightChild) {
+    // if (rightChild && tree[rightChild]) {
     //   dfsTraverse(rightChild);
+    // }
+    // if (typeof tree[position] === "number") {
+    //   console.log("Visited -->", tree[position]);
     // }
   };
   dfsTraverse(position);
@@ -80,14 +77,15 @@ const bfs = (tree: any[]) => {
 };
 
 const start = () => {
-  const tree = [0, 1, 2, 3, 4, 5, 6, 7];
+  // const tree = [0, 1, 2, 3, 4, 5, 6, 7];
+  // const tree = [5, 12, 7, 18, , 69, , 4, 13];
   // console.log("Tree--->", tree);
   //                   0
   //            1             2
   //        3       4     5        6
   //    7
   // dfs(tree);
-  bfs(tree);
+  //bfs(tree);
 };
 
 start();
