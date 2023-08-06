@@ -153,7 +153,12 @@ const start = () => {
   getMaxSortedArray();
 };
 
-start();
+// start();
+
+export const buildHeap = (unsortedArray: any[]) => {
+  addElementMinHeap([...unsortedArray]);
+  return minHeap;
+};
 
 // 1 -> 2,3
 // 2 -> 4,5
