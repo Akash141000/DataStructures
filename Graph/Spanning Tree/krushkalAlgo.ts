@@ -4,6 +4,7 @@ import {
   buildTreeHeap,
   removeElementMinHeap,
 } from "../../Heap/heapTree";
+
 //
 //         A
 //     70 /                     // AB - 70
@@ -14,6 +15,15 @@ import {
 //   60 | 50/        \  |       // CE - 30
 //      D---------------E       // DE - 10
 //              10
+//
+
+const graph: { [key: string]: string[] } = {
+  A: ["B"],
+  B: ["C", "D", "E"],
+  C: ["B", "E", "D"],
+  D: ["B", "E", "C"],
+  E: ["C", "D", "B"],
+};
 
 const edgeWeights: { [key: string]: number } = {
   AB: 70,
@@ -25,17 +35,6 @@ const edgeWeights: { [key: string]: number } = {
   DE: 10,
 };
 
-const graphNodes = { A: 1, B: 2, C: 3, D: 4, E: 5 };
-const graphMatrix = [];
-
-const graph: { [key: string]: string[] } = {
-  A: ["B"],
-  B: ["C", "D", "E"],
-  C: ["B", "E", "D"],
-  D: ["B", "E", "C"],
-  E: ["C", "D", "B"],
-};
-
 const graphAfter: { [key: string]: string[] } = {
   A: [],
   B: [],
@@ -44,29 +43,27 @@ const graphAfter: { [key: string]: string[] } = {
   E: [],
 };
 
-let visitedNodesDFT: { [key: string]: boolean } = {};
+let visitedNodesDFT: { [key: string]: boolean } = {}; // let is used since dft used for cycle detection
 const visitedNodesBFT: { [key: string]: boolean } = {};
 
-function dft(node: string, graph: { [key: string]: string[] }) {
-  let cyclePresent = false;
+function dft(
+  node: string,
+  graph: { [key: string]: string[] },
+  cyclePresent?: boolean[]
+) {
   console.log("Node -->", node);
-  //   console.log("VISITED NODES", visitedNodesDFT);
-
   visitedNodesDFT[node] = true; //mark node as visited
 
   const adjacentNodes = graph[node];
   if (adjacentNodes.length > 0) {
     adjacentNodes.forEach((adjacentNode) => {
-      console.log("Is present", adjacentNode, "NODE");
-      if (visitedNodesDFT[adjacentNode]) {
-        cyclePresent = true;
-      }
-      if (!visitedNodesDFT[adjacentNode]) {
-        return dft(adjacentNode, graph);
+      if (visitedNodesDFT[adjacentNode] && cyclePresent) {
+        cyclePresent.push(true);
+      } else if (!visitedNodesDFT[adjacentNode]) {
+        dft(adjacentNode, graph, cyclePresent);
       }
     });
   }
-  return cyclePresent;
 }
 
 function bft(node: string, graph: { [key: string]: string[] }) {
@@ -84,10 +81,6 @@ function bft(node: string, graph: { [key: string]: string[] }) {
   }
   while (QHasElement()) {
     const newNode = deQueue();
-    // if (visitedNodesBFT[newNode?.data]) {
-    //   console.log("Cycle Present", newNode?.data);
-    //   return true;
-    // }
     if (newNode?.data && !visitedNodesBFT[newNode?.data]) {
       return bft(newNode?.data, graph);
     }
@@ -109,28 +102,34 @@ function start() {
     nodeEdges.push(new NodeTreeElement(edge, edgeWeights[edge]));
   });
   const minHeap = buildTreeHeap(nodeEdges);
-  const minSortedNodes: NodeTreeElement[] = [];
+  let validEdges: any[] = [];
   minHeap.forEach((node) => {
     const minNode = removeElementMinHeap();
-    console.log("MIN NODE>>>>>>>>>>>>>>>>>>>>>>>>>", minNode.data);
+    console.log("Edge ----------->", minNode.data);
     const nodes = minNode.data!.split("");
     if (nodes?.length >= 2) {
       graphAfter[nodes[0]].push(nodes[1]);
     }
-    console.log("GRAPH AFTER>>>", graphAfter);
-    visitedNodesDFT = {};
-    const cyclePresent = dft(nodes[0], graphAfter);
-    if (cyclePresent) {
+    visitedNodesDFT = {}; //visited nodes reset
+    let cyclePresent: boolean[] = [];
+    dft(nodes[0], graphAfter, cyclePresent);
+
+    if (cyclePresent.some((val) => val === true)) {
       const indexToRemove = graphAfter[nodes[0]].findIndex(
         (element) => element === nodes[1]
       );
       graphAfter[nodes[0]].splice(indexToRemove);
+    } else {
+      validEdges.push(minNode.data);
     }
-    console.log("CYCLE", cyclePresent);
   });
-  console.log("Graph after", graphAfter);
+  validEdges.forEach((edge) => {
+    const nodes = edge.split("");
+    graphAfter[nodes[1]].push(nodes[0]);
+  });
+  console.log("Acyclic graph -->", graphAfter);
+  visitedNodesDFT = {};
   dft("A", graphAfter);
-  //   console.log("MIN SORTED", minSortedNodes);
 }
 
 start();
