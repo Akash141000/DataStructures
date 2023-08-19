@@ -5,6 +5,7 @@ import {
   removeElementMinHeap,
 } from "../../Heap/heapTree";
 
+//// Graph 1
 //
 //         A
 //     70 /                     // AB - 70
@@ -17,22 +18,56 @@ import {
 //              10
 //
 
+// const graph: { [key: string]: string[] } = {
+//   A: ["B"],
+//   B: ["C", "D", "E", "A"],
+//   C: ["B", "E", "D"],
+//   D: ["B", "E", "C"],
+//   E: ["C", "D", "B"],
+// };
+
+// const edgeWeights: { [key: string]: number } = {
+//   AB: 70,
+//   BD: 60,
+//   BC: 20,
+//   BE: 40,
+//   DC: 50,
+//   CE: 30,
+//   DE: 10,
+// };
+
+//// Graph 2
+//                A
+//             /  |  \
+//          7/    |2   \6
+//         /   6  |   6  \
+//      B ------- C ------- D
+//        \     /   \     /
+//        4\  8/    5\   /3
+//          \ /       \ /
+//           E  -----  F
+//                7
+
 const graph: { [key: string]: string[] } = {
-  A: ["B"],
-  B: ["C", "D", "E"],
-  C: ["B", "E", "D"],
-  D: ["B", "E", "C"],
-  E: ["C", "D", "B"],
+  A: ["B", "C", "D"],
+  B: ["A", "C", "E"],
+  C: ["A", "B", "D", "F", "E"],
+  D: ["A", "C", "F"],
+  E: ["B", "C", "F"],
+  F: ["C", "D", "E"],
 };
 
 const edgeWeights: { [key: string]: number } = {
-  AB: 70,
-  BD: 60,
-  BC: 20,
-  BE: 40,
-  DC: 50,
-  CE: 30,
-  DE: 10,
+  AB: 7,
+  AC: 2,
+  AD: 6,
+  CB: 6,
+  CD: 6,
+  BE: 4,
+  CE: 8,
+  CF: 5,
+  DF: 3,
+  EF: 7,
 };
 
 const graphAfter: { [key: string]: string[] } = {
@@ -41,7 +76,10 @@ const graphAfter: { [key: string]: string[] } = {
   C: [],
   D: [],
   E: [],
+  F: [],
 };
+
+const edgeTraversalPath: string[] = [];
 
 let visitedNodesDFT: { [key: string]: boolean } = {}; // let is used since dft used for cycle detection
 const visitedNodesBFT: { [key: string]: boolean } = {};
@@ -51,7 +89,7 @@ function dft(
   graph: { [key: string]: string[] },
   cyclePresent?: boolean[]
 ) {
-  console.log("Node -->", node);
+  // console.log("Node -->", node, graphAfter);
   visitedNodesDFT[node] = true; //mark node as visited
 
   const adjacentNodes = graph[node];
@@ -66,37 +104,7 @@ function dft(
   }
 }
 
-function bft(node: string, graph: { [key: string]: string[] }) {
-  console.log("Node -->", node);
-
-  visitedNodesBFT[node] = true; //mark node as visited
-
-  const adjacentNodes = graph[node];
-  if (adjacentNodes.length > 0) {
-    adjacentNodes.forEach((adjacentNode) => {
-      if (!visitedNodesBFT[adjacentNode]) {
-        enQueue(new NodeElement(adjacentNode));
-      }
-    });
-  }
-  while (QHasElement()) {
-    const newNode = deQueue();
-    if (newNode?.data && !visitedNodesBFT[newNode?.data]) {
-      return bft(newNode?.data, graph);
-    }
-  }
-  return false;
-}
-
 function start() {
-  //DFT
-  //   console.log("Traversing... Depth first search");
-  //   dft("A");
-
-  //BFT
-  //   console.log("Traversing... Breadth first search");
-  //   bft("A", graph);
-
   const nodeEdges: any[] = [];
   Object.keys(edgeWeights).forEach((edge) => {
     nodeEdges.push(new NodeTreeElement(edge, edgeWeights[edge]));
@@ -113,6 +121,7 @@ function start() {
     visitedNodesDFT = {}; //visited nodes reset
     let cyclePresent: boolean[] = [];
     dft(nodes[0], graphAfter, cyclePresent);
+    // console.log("NODES", nodes, cyclePresent);
 
     if (cyclePresent.some((val) => val === true)) {
       const indexToRemove = graphAfter[nodes[0]].findIndex(
@@ -125,11 +134,13 @@ function start() {
   });
   validEdges.forEach((edge) => {
     const nodes = edge.split("");
+    edgeTraversalPath.push(`${nodes[0]}${nodes[1]}`);
     graphAfter[nodes[1]].push(nodes[0]);
   });
   console.log("Acyclic graph -->", graphAfter);
   visitedNodesDFT = {};
   dft("A", graphAfter);
+  console.log("Edge Traversal", edgeTraversalPath);
 }
 
 start();
