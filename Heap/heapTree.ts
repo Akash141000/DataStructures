@@ -81,6 +81,10 @@ export const removeElementMinHeap = () => {
       !minHeap[leftChildIndex]?.value
     ) {
       swapChildIndex = rightChildIndex;
+    } else if (
+      minHeap[rightChildIndex]?.value === minHeap[leftChildIndex]?.value
+    ) {
+      swapChildIndex = rightChildIndex;
     }
     swap = minHeap[swapChildIndex];
     minHeap[swapChildIndex] = leafElement;
@@ -117,6 +121,10 @@ export const removeElementMaxHeap = () => {
     } else if (
       maxHeap[rightChildIndex]?.value > maxHeap[leftChildIndex]?.value ||
       !maxHeap[leftChildIndex]?.value
+    ) {
+      swapChildIndex = rightChildIndex;
+    } else if (
+      maxHeap[rightChildIndex]?.value === maxHeap[leftChildIndex]?.value
     ) {
       swapChildIndex = rightChildIndex;
     }
