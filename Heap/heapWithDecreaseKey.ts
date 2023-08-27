@@ -1,5 +1,5 @@
-let minHeap: NodeTreeElement[] = [];
-let maxHeap: NodeTreeElement[] = [];
+export let minHeap: NodeTreeElement[] = [];
+export let maxHeap: NodeTreeElement[] = [];
 
 export class NodeTreeElement {
   data: string | null = null;
@@ -88,7 +88,7 @@ export const removeElementMinHeap = () => {
       minHeap[rightChildIndex]?.value === minHeap[leftChildIndex]?.value
     ) {
       swapChildIndex = rightChildIndex;
-    }
+    }    
     swap = minHeap[swapChildIndex];
     minHeap[swapChildIndex] = leafElement;
     minHeap[parentIndex] = swap;
