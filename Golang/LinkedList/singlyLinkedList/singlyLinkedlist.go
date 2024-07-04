@@ -1,17 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"LinkedList/utils"
+	"fmt"
+)
 
-type ListNode struct {
-	Prev *ListNode
-	Next *ListNode
-	Data any
-}
+var HeadNode *utils.ListNode
 
-var HeadNode *ListNode
-
-func AddNewNode(data string) *ListNode {
-	listNode := &ListNode{
+func AddNewNode(data string) *utils.ListNode {
+	listNode := &utils.ListNode{
 		Data: data,
 	}
 
@@ -25,7 +22,7 @@ func AddNewNode(data string) *ListNode {
 	return listNode
 }
 
-func GetLastNode() *ListNode {
+func GetLastNode() *utils.ListNode {
 	LastNode := &HeadNode
 	for (*LastNode).Next != nil {
 		LastNode = &(*LastNode).Next
